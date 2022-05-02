@@ -27,7 +27,7 @@
           </label>
         </div>
         <div class="small-12 medium-2 cell">
-          <button :disabled="disabled" class="button" @click="fetchStats()">Get Result</button>
+          <button class="button" @click="fetchStats()">Get Result</button>
         </div>
       </div>
 
@@ -99,10 +99,10 @@ export default {
 
   computed: {
     disabled () {
-      return this.errors.url.length > 0 || this.errors.max_pages.length > 0;
+      return this.errors.url.length > 0 || this.errors.max_pages.length > 0 || this.isCrawling;
     },
     crawl_btn_text () {
-      return this.isCrawling ? 'Crawling' : 'Start Crawling'
+      return this.isCrawling ? ' Please Wait While Crawling' : 'Start Crawling'
     }
   },
 
@@ -113,9 +113,7 @@ export default {
   methods: {
 
     crawl () {
-      this.stats = {}
-      this.stats_err = {}
-      this.job_id = null
+      this.resetStats()
       const params = new URLSearchParams()
       params.append('url', this.url)
       params.append('max_pages', this.max_pages)
@@ -146,6 +144,7 @@ export default {
     },
 
     fetchStats () {
+      this.resetStats()
       axios
           .get('/api/v1/getCrawlerStatJob/' + this.job_id)
           .then(response => {
@@ -158,6 +157,11 @@ export default {
           }).catch(error => {
             this.stats_err = error.response.data;
       })
+    },
+
+    resetStats () {
+      this.stats = {}
+      this.stats_err = {}
     },
 
     validateUrl (value) {
