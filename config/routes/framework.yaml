@@ -2,3 +2,17 @@ when@dev:
     _errors:
         resource: '@FrameworkBundle/Resources/config/routing/errors.xml'
         prefix: /_error
+
+default:
+    path: /
+    controller: App\Controller\IndexController
+
+api_crawl_link:
+    path: /api/v1/crawlLink
+    controller: App\Controller\Api\CrawlLinkController
+    methods: [POST]
+
+api_get_crawler_star_job:
+    path: /api/v1/getCrawlerStatJob/{job_id}
+    controller: App\Controller\Api\GetCrawlerStatJobController
+    methods: [GET]
