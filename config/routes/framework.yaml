@@ -7,6 +7,12 @@ default:
     path: /
     controller: App\Controller\IndexController
 
+front_end_vue:
+    path: /{req}
+    controller: App\Controller\IndexController
+    requirements:
+        req: "^((?!api).)*$"
+
 api_crawl_link:
     path: /api/v1/crawlLink
     controller: App\Controller\Api\CrawlLinkController

@@ -11,9 +11,11 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 
 import Home from './views/Home'
+import PageNotFound from './error/PageNotFound'
 
 const routes = [
     { path: '/', component: Home },
+    { path: '/:pathMatch(.*)*', component: PageNotFound }
 ]
 
 
