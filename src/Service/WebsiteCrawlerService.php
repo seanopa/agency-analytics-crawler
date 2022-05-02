@@ -27,7 +27,7 @@ class WebsiteCrawlerService
     private LinkCrawlerTrackingRepository $crawlerTrackingRepository;
     private WebsiteCrawler $websiteCrawler;
     private ?\App\Entity\CrawlerStatJob $crawlerStatJob;
-    private string $initialLink;
+    private ?string $initialLink;
     private ?int $maxPagesToVisit;
     private ?\App\Entity\Link $initialLinkEntity;
 
@@ -74,7 +74,7 @@ class WebsiteCrawlerService
             return null;
         }
 
-        $pagesCrawled = $this->crawlerTrackingRepository->findBy(['crawlerJobStat' => $this->crawlerStatJob]);
+        $pagesCrawled = $this->crawlerTrackingRepository->findBy(['crawlerJobStat' => $job]);
 
         $summary = new CrawlerJobSummary($job, $pagesCrawled);
 
@@ -152,31 +152,28 @@ class WebsiteCrawlerService
             throw new \RuntimeException("Initial url is required");
         }
 
-        if (empty($this->host)) {
+       $hostname = parse_url($this->initialLink, PHP_URL_HOST);
+       $scheme = parse_url($this->initialLink, PHP_URL_SCHEME);
 
-           $hostname = parse_url($this->initialLink, PHP_URL_HOST);
-           $scheme = parse_url($this->initialLink, PHP_URL_SCHEME);
+       $host = $this->hostRepository->findOneBy(['name' => $hostname]);
 
-           $host = $this->hostRepository->findOneBy(['name' => $hostname]);
+       if (empty($host)) {
+           $host = $this->hostRepository->create($hostname);
+       }
 
-           if (empty($host)) {
-               $host = $this->hostRepository->create($hostname);
-           }
+       if (sprintf('%s://%s', $scheme, $hostname) === ($link = rtrim($this->initialLink, '/'))) {
+           $this->setInitialLink($link.'/');
+       }
 
-           if (sprintf('%s://%s', $scheme, $hostname) === ($link = rtrim($this->initialLink, '/'))) {
-               $this->setInitialLink($link.'/');
-           }
+       $this->host = $host;
 
-           $this->host = $host;
+        $this->initialLinkEntity = $this->getLinkEntityForUrl($this->initialLink);
 
-            $this->initialLinkEntity = $this->getLinkEntityForUrl($this->initialLink);
+        $this->crawlerStatJobRepository->start($this->crawlerStatJob, $this->initialLinkEntity);
 
-            $this->crawlerStatJobRepository->start($this->crawlerStatJob, $this->initialLinkEntity);
+        $this->logger->debug('Starting Job '. $this->crawlerStatJob->getId() .' with initial link is ' . $this->initialLinkEntity->getUrl());
 
-            $this->logger->debug('Starting Job '. $this->crawlerStatJob->getId() .' with initial link is ' . $this->initialLinkEntity->getUrl());
-
-            $this->websiteCrawler = new WebsiteCrawler($this->logger, $scheme, $hostname, $this->maxPagesToVisit);
-        }
+        $this->websiteCrawler = new WebsiteCrawler($this->logger, $scheme, $hostname, $this->maxPagesToVisit);
     }
 
     /**
@@ -187,7 +184,7 @@ class WebsiteCrawlerService
     {
         $linkEntity = $this->linkRepository->findOneBy(['host' => $this->host, 'url' => $url]);
 
-        if (empty($linkEntity)) {var_dump('yes');
+        if (empty($linkEntity)) {
             $linkEntity = $this->linkRepository->create($this->host, $url);
         }
 

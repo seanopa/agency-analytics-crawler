@@ -36,6 +36,7 @@ class WebsiteCrawler
     /**
      * @param string $url
      * @return PageStat
+     * @throws HttpException
      */
     public function statPage(string $url): PageStat
     {

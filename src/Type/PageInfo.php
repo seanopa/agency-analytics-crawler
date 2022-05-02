@@ -21,7 +21,7 @@ class PageInfo extends AbstractResponseType
     protected ?int $unique_internal_links_count;
     protected ?int $unique_external_links_count;
     protected ?int $complete_status;
-    protected string $updated_at;
+    protected ?string $updated_at;
 
     /**
      * @param LinkCrawlerTracking $tracking

@@ -15,7 +15,8 @@
         </label>
       </div>
       <div class="small-12 medium-2 cell">
-        <button :disabled="disabled" class="button" @click="crawl()">{{crawl_btn_text}}</button>
+
+        <button :disabled="disabled" class="button" @click="crawl()"> <div v-if="isCrawling" class="spinning-loader">Loading...</div> {{crawl_btn_text}}</button>
       </div>
 
       <div class="grid-y grid-padding-y">
@@ -148,9 +149,8 @@ export default {
       axios
           .get('/api/v1/getCrawlerStatJob/' + this.job_id)
           .then(response => {
-            this.stats = response.data;
-            this.stats_err = {};
-            if (this.stats.updated_at) {
+            if (response.data.updated_at) {
+              this.stats = response.data;
               this.isCrawling = false;
               if (this.polling) clearInterval(this.polling)
             }
@@ -196,3 +196,70 @@ export default {
   }
 }
 </script>
+<style ref="text/css">
+.spinning-loader {
+  font-size: 10px;
+  margin-top: -2px;
+  text-indent: -9999em;
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  background: #963182;
+  background: -moz-linear-gradient(left, #963182 10%, rgba(150,49,130, 0) 42%);
+  background: -webkit-linear-gradient(left, #963182 10%, rgba(150,49,130, 0) 42%);
+  background: -o-linear-gradient(left, #963182 10%, rgba(150,49,130, 0) 42%);
+  background: -ms-linear-gradient(left, #963182 10%, rgba(150,49,130, 0) 42%);
+  background: linear-gradient(to right, #963182 10%, rgba(150,49,130, 0) 42%);
+  position: relative;
+  -webkit-animation: load3 1.4s infinite linear;
+  animation: load3 1.4s infinite linear;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  display: inline-block;
+}
+.spinning-loader:before {
+  width: 50%;
+  height: 50%;
+  background: #963182;
+  border-radius: 100% 0 0 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '';
+}
+.spinning-loader:after {
+  background: transparent;
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  content: '';
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+@-webkit-keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+</style>
