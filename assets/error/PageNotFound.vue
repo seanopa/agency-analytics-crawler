@@ -9,7 +9,7 @@
         <p>Some people understand this problem as a 404 error.</p>
 
         <div class="back-to-front">
-          <a><p>Get me back to the front page <span id="table-flip">(╯°□°）╯︵ ┻━┻</span></p></a>
+          <a href="/"><p>Get me back to the front page <span id="table-flip">(╯°□°）╯︵ ┻━┻</span></p></a>
         </div>
 
       </div>
