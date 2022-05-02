@@ -45,10 +45,14 @@ class AnalyticsCrawlerCommand extends Command
         $link = $input->getOption('url') ?? null;
         $maxPagesToCrawl = $input->getOption('max-pages') ?? -1;
 
+
         $crawlerStatJob = $this->httpCrawlerService->createNewStatJob();
 
+        $message = new CrawlWebsiteMessage($crawlerStatJob->getId(), $link, $maxPagesToCrawl);
+        $this->messageBus->dispatch($message);
+        return Command::SUCCESS;
+
         $this->httpCrawlerService
-            ->setCrawlerJob($crawlerStatJob->getId())
             ->setInitialLink($link)
             ->setMaxPagesToVisit($maxPagesToCrawl)
         ;

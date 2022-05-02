@@ -22,7 +22,7 @@ class CrawlWebsiteMessageHandler implements MessageHandlerInterface
         $limit = $message->getMaxPagesToCrawl();
 
         $this->httpCrawlerService
-            ->setCrawlerJob($id)
+            ->setCrawlerStatJob($id)
             ->setInitialLink($link)
             ->setMaxPagesToVisit($limit)
             ;

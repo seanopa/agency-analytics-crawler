@@ -23,7 +23,7 @@ class LinkCrawlerTracking
     /**
      * @var CrawlerStatJob
      *
-     * @ORM\ManyToOne(targetEntity="CrawlerStatJob")
+     * @ORM\ManyToOne(targetEntity="CrawlerStatJob", cascade={"merge"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="job_stat_id", referencedColumnName="id")
      * })
@@ -33,7 +33,7 @@ class LinkCrawlerTracking
     /**
      * @var Link
      *
-     * @ORM\ManyToOne(targetEntity="Link")
+     * @ORM\ManyToOne(targetEntity="Link", cascade={"merge"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="link_id", referencedColumnName="id")
      * })

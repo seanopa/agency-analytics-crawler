@@ -31,14 +31,14 @@ class PageInfo extends AbstractResponseType
         $this->tracking_id = $tracking->getId();
         $this->url = $tracking->getLink()->getUrl();
         $this->title = $tracking->getLink()->getTitle();
-        $this->start_date = $tracking->getStartDate()->format('Y-m-d');
-        $this->start_time = $tracking->getStartTime()->format('H:i:s');
+        $this->start_date = $tracking->getStartDate()?->format('Y-m-d');
+        $this->start_time = $tracking->getStartTime()?->format('H:i:s');
         $this->http_status = $tracking->getHttpStatus();
         $this->message = $tracking->getMessage();
         $this->unique_image_count = $tracking->getImageCount();
         $this->unique_internal_links_count = $tracking->getInternalLinksCount();
         $this->unique_external_links_count = $tracking->getExternalLinksCount();
         $this->complete_status = $tracking->getCompleteStatus();
-        $this->updated_at = $tracking->getUpdatedAt()->format('Y-m-d H:i:s');
+        $this->updated_at = $tracking->getUpdatedAt()?->format('Y-m-d H:i:s');
     }
 }

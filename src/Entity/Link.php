@@ -23,7 +23,7 @@ class Link
     /**
      * @var Host
      *
-     * @ORM\ManyToOne(targetEntity="Host")
+     * @ORM\ManyToOne(targetEntity="Host", cascade={"merge"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="host_id", referencedColumnName="id")
      * })

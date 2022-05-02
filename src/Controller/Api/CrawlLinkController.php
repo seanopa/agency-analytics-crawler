@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller\Api;
 
-use App\Http\Response;
 use App\Message\CrawlWebsiteMessage;
 use App\Service\WebsiteCrawlerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,10 +28,8 @@ class CrawlLinkController extends AbstractController
 
         $newCrawlerJob = $websiteCrawlerService->createNewStatJob();
 
-        Response::flush(new JsonResponse(['job_id' => $newCrawlerJob->getId()]));
-
         $bus->dispatch(new CrawlWebsiteMessage($newCrawlerJob->getId(), $url, $maxPagesToCrawl));
 
-        exit(0);
+        return new JsonResponse(['job_id' => $newCrawlerJob->getId()]);
     }
 }

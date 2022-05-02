@@ -175,10 +175,10 @@ export default {
 
     validateMaxPages (value) {
 
-      if (value < 1 || value < 11) {
+      if (value > 0 && value < 101) {
         this.errors['max_pages'] = '';
       } else {
-        this.errors['max_pages'] = 'Max pages must be between 1 and 10';
+        this.errors['max_pages'] = 'Max pages must be in range of [1-100]';
       }
     }
   },

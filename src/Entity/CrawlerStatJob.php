@@ -21,9 +21,9 @@ class CrawlerStatJob
 
 
     /**
-     * @var Host
+     * @var Link
      *
-     * @ORM\ManyToOne(targetEntity="Link")
+     * @ORM\ManyToOne(targetEntity="Link", cascade={"merge"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="link_id", referencedColumnName="id")
      * })

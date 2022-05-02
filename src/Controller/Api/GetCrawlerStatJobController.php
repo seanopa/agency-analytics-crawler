@@ -21,7 +21,7 @@ class GetCrawlerStatJobController extends AbstractController
      */
     public function __invoke(Request $request, WebsiteCrawlerService $websiteCrawlerService, $job_id)
     {
-        $job = $websiteCrawlerService->getCrawlStatJobSummary($job_id);
+        $job = $websiteCrawlerService->getCrawlStatJobSummaryFromStatJobId($job_id);
 
         if (empty($job)) {
             throw new HttpException(404, 'No such job exists');

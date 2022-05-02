@@ -1,6 +1,7 @@
 <?php
 namespace App\Service;
 
+use App\Entity\CrawlerStatJob;
 use App\Entity\Host;
 use App\Http\HttpException;
 use App\Http\WebsiteCrawler;
@@ -59,25 +60,23 @@ class WebsiteCrawlerService
      * @param $id
      * @return $this
      */
-    public function setCrawlerJob($id): static
+    public function setCrawlerStatJob($id): static
     {
-        if (empty($this->crawlerStatJob)) {
-            $this->crawlerStatJob = $this->crawlerStatJobRepository->find($id);
-        }
+        $this->crawlerStatJob = $this->crawlerStatJobRepository->find($id);
         return $this;
     }
 
-    public function getCrawlStatJobSummary($id): ?CrawlerJobSummary
+    public function getCrawlStatJobSummaryFromStatJobId($id): ?CrawlerJobSummary
     {
-        $this->setCrawlerJob($id);
+        $job = $this->crawlerStatJobRepository->find($id);
 
-        if (empty($this->crawlerStatJob)) {
+        if (empty($job)) {
             return null;
         }
 
         $pagesCrawled = $this->crawlerTrackingRepository->findBy(['crawlerJobStat' => $this->crawlerStatJob]);
 
-        $summary = new CrawlerJobSummary($this->crawlerStatJob, $pagesCrawled);
+        $summary = new CrawlerJobSummary($job, $pagesCrawled);
 
         return $summary;
     }
@@ -174,6 +173,8 @@ class WebsiteCrawlerService
 
             $this->crawlerStatJobRepository->start($this->crawlerStatJob, $this->initialLinkEntity);
 
+            $this->logger->debug('Starting Job '. $this->crawlerStatJob->getId() .' with initial link is ' . $this->initialLinkEntity->getUrl());
+
             $this->websiteCrawler = new WebsiteCrawler($this->logger, $scheme, $hostname, $this->maxPagesToVisit);
         }
     }
@@ -186,7 +187,7 @@ class WebsiteCrawlerService
     {
         $linkEntity = $this->linkRepository->findOneBy(['host' => $this->host, 'url' => $url]);
 
-        if (empty($linkEntity)) {
+        if (empty($linkEntity)) {var_dump('yes');
             $linkEntity = $this->linkRepository->create($this->host, $url);
         }
 
