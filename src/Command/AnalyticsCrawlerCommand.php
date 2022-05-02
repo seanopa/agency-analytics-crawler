@@ -49,7 +49,7 @@ class AnalyticsCrawlerCommand extends Command
 
         $this->httpCrawlerService
             ->setCrawlerJob($crawlerStatJob->getId())
-            ->setLink($link)
+            ->setInitialLink($link)
             ->setMaxPagesToVisit($maxPagesToCrawl)
         ;
 

@@ -86,7 +86,7 @@ class WebsiteCrawlerService
      * @param string $link
      * @return $this
      */
-    public function setLink(string $link): static
+    public function setInitialLink(string $link): static
     {
         $this->initialLink = $link;
         return $this;
@@ -162,6 +162,10 @@ class WebsiteCrawlerService
 
            if (empty($host)) {
                $host = $this->hostRepository->create($hostname);
+           }
+
+           if (sprintf('%s://%s', $scheme, $hostname) === ($link = rtrim($this->initialLink, '/'))) {
+               $this->setInitialLink($link.'/');
            }
 
            $this->host = $host;
