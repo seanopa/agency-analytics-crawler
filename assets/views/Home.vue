@@ -15,7 +15,7 @@
         </label>
       </div>
       <div class="small-12 medium-2 cell">
-        <button :disabled="disabled" class="button" @click="crawl()">Start Crawling</button>
+        <button :disabled="disabled" class="button" @click="crawl()">{{crawl_btn_text}}</button>
       </div>
 
       <div class="grid-y grid-padding-y">
@@ -91,6 +91,7 @@ export default {
       url: '',
       max_pages: ''
     },
+    isCrawling: false,
     stats: {},
     stats_err: {},
     polling: null
@@ -99,6 +100,9 @@ export default {
   computed: {
     disabled () {
       return this.errors.url.length > 0 || this.errors.max_pages.length > 0;
+    },
+    crawl_btn_text () {
+      return this.isCrawling ? 'Crawling' : 'Start Crawling'
     }
   },
 
@@ -109,7 +113,9 @@ export default {
   methods: {
 
     crawl () {
-
+      this.stats = {}
+      this.stats_err = {}
+      this.job_id = null
       const params = new URLSearchParams()
       params.append('url', this.url)
       params.append('max_pages', this.max_pages)
@@ -119,12 +125,11 @@ export default {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       }
-
+      this.isCrawling = true;
       axios
           .post('/api/v1/crawlLink', params, config)
           .then( response => {
             this.job_id = response.data.job_id;
-            this.stats_err = {};
             this.pollResult();
           })
           .catch( (error) => {
@@ -147,6 +152,7 @@ export default {
             this.stats = response.data;
             this.stats_err = {};
             if (this.stats.updated_at) {
+              this.isCrawling = false;
               if (this.polling) clearInterval(this.polling)
             }
           }).catch(error => {
