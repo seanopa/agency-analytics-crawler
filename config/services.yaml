@@ -20,7 +20,7 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    App\Transport\MysqlTransportFactory:
+    App\Messenger\MysqlTransportFactory:
         tags: [ messenger.transport_factory ]
 
     # add more service definitions when explicit configuration is needed
